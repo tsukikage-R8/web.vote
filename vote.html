@@ -110,36 +110,39 @@ options = ["吹奏楽部","コーラス部","家庭科部"];
 // ----------------------
 // ③ 画面反映
 // ----------------------
-document.getElementById("title").innerText = title;
-
-const select = document.querySelector("select");
-
-options.forEach(o=>{
-const opt = document.createElement("option");
-opt.textContent = o;
-opt.value = o;
-select.appendChild(opt);
-});
-
-// ----------------------
-// ④ 確認画面へ
-// ----------------------
 document.getElementById("form").addEventListener("submit",(e)=>{
 e.preventDefault();
 
 const choice = e.target.choice.value;
 
-// 👇ここで送信（追加）
+// 送信中表示（任意）
+console.log("送信中...");
+
 fetch("https://script.google.com/macros/s/AKfycbz7dNbsj7XutVdKaTkehBIiC_LAHM2_QbEphy9jTkV5gTLJ3x8KGkRRyUUTYqKRgm5IXg/exec", {
-method:"POST",
+method: "POST",
 body: JSON.stringify({
 type: type,
 choice: choice
 })
-});
+})
+.then(res => {
+if(!res.ok){
+throw new Error("送信失敗");
+}
+return res.text();
+})
+.then(data => {
+console.log("成功:", data);
 
-// 👇そのまま確認画面へ
+// 成功 → confirmへ
 location.href = `confirm.html?type=${type}&choice=${encodeURIComponent(choice)}`;
+})
+.catch(err => {
+console.error(err);
+
+// 失敗メッセージ
+alert("送信に失敗しました。もう一度試してください。");
+});
 });
 </script>
 
