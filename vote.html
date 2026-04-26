@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>月影祭 投票フォーム</title>
+
+<style>
+body{
+margin:0;
+font-family:sans-serif;
+background:#0b1026;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+}
+
+.container{
+width:90%;
+max-width:420px;
+background:rgba(255,255,255,0.08);
+padding:24px;
+border-radius:16px;
+backdrop-filter:blur(10px);
+}
+
+h1{
+text-align:center;
+font-size:20px;
+margin-bottom:20px;
+}
+
+select{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:10px;
+outline:none;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:linear-gradient(90deg,#4fc3ff,#7ee0ff);
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 id="title">投票フォーム</h1>
+
+<form id="form">
+
+<select name="choice" required>
+<option value="">選択してください</option>
+</select>
+
+<button type="submit">確認へ</button>
+
+</form>
+
+</div>
+
+<script>
+// ----------------------
+// ① type取得
+// ----------------------
+const params = new URLSearchParams(location.search);
+const type = params.get("type");
+
+// ----------------------
+// ② 選択肢データ
+// ----------------------
+let title = "投票フォーム";
+let options = [];
+
+if(type === "class"){
+title = "クラス企画投票";
+options = [
+"1J1","1J2","1J3","1J4","1J5",
+"1K1","1K2",
+"1S1","1S2","1SS",
+"2J1","2J2","2J3","2J4","2J5",
+"2K","2S","2SS",
+"3J1","3J2","3J3","3J4","3J5",
+"3K","3S1","3S2","3SS"
+];
+
+}else if(type === "sports"){
+title = "運動部投票";
+options = ["ダンス部","バスケ部"];
+
+}else if(type === "culture"){
+title = "文化部投票";
+options = ["吹奏楽部","コーラス部","家庭科部"];
+}
+
+// ----------------------
+// ③ 画面反映
+// ----------------------
+document.getElementById("title").innerText = title;
+
+const select = document.querySelector("select");
+
+options.forEach(o=>{
+const opt = document.createElement("option");
+opt.textContent = o;
+opt.value = o;
+select.appendChild(opt);
+});
+
+// ----------------------
+// ④ 確認画面へ
+// ----------------------
+document.getElementById("form").addEventListener("submit",(e)=>{
+e.preventDefault();
+
+const choice = e.target.choice.value;
+
+location.href =
+`confirm.html?type=${type}&choice=${encodeURIComponent(choice)}`;
+});
+</script>
+
+</body>
+</html>
