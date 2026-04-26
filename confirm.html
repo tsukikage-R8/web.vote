@@ -1,7 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>確認画面</title>
+
+<style>
+body{
+margin:0;
+font-family:sans-serif;
+background:#0b1026;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+}
+
+.container{
+width:90%;
+max-width:420px;
+background:rgba(255,255,255,0.08);
+padding:24px;
+border-radius:16px;
+text-align:center;
+}
+
+h2{
+margin-bottom:10px;
+}
+
+p{
+margin-bottom:20px;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:linear-gradient(90deg,#4fc3ff,#7ee0ff);
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2 id="type">読み込み中...</h2>
+<p id="choice">読み込み中...</p>
+
+<button id="send">送信する</button>
+
+</div>
+
 <script>
+window.addEventListener("DOMContentLoaded", () => {
+
 const params = new URLSearchParams(location.search);
 const type = params.get("type");
 const choice = params.get("choice");
+
+const typeEl = document.getElementById("type");
+const choiceEl = document.getElementById("choice");
+const sendBtn = document.getElementById("send");
 
 let typeText = "";
 
@@ -9,25 +76,29 @@ if(type === "class") typeText = "クラス企画";
 if(type === "sports") typeText = "運動部";
 if(type === "culture") typeText = "文化部";
 
-document.getElementById("type").innerText = "種類：" + typeText;
-document.getElementById("choice").innerText = "投票先：" + choice;
+typeEl.innerText = "種類：" + typeText;
+choiceEl.innerText = "投票先：" + choice;
 
-// 👇ここが送信本体
-document.getElementById("send").onclick = ()=>{
+sendBtn.onclick = () => {
 
 fetch("https://script.google.com/macros/s/AKfycbz7dNbsj7XutVdKaTkehBIiC_LAHM2_QbEphy9jTkV5gTLJ3x8KGkRRyUUTYqKRgm5IXg/exec", {
-method:"POST",
+method: "POST",
 body: JSON.stringify({
 type: type,
 choice: choice
 })
 })
-.then(()=> {
+.then(() => {
 location.href = "thanks.html";
 })
-.catch(()=>{
+.catch(() => {
 alert("送信に失敗しました");
 });
 
 };
+
+});
 </script>
+
+</body>
+</html>
