@@ -1,6 +1,14 @@
+<select name="choice" id="choiceSelect" required>
+<option value="">選択してください</option>
+</select>
+
 <script>
+window.addEventListener("DOMContentLoaded", () => {
+
 const params = new URLSearchParams(location.search);
 const type = params.get("type");
+
+const select = document.getElementById("choiceSelect");
 
 let options = [];
 
@@ -20,8 +28,6 @@ options = ["ダンス部","バスケ部"];
 options = ["吹奏楽部","コーラス部","家庭科部"];
 }
 
-const select = document.querySelector("select");
-
 options.forEach(o=>{
 const opt = document.createElement("option");
 opt.value = o;
@@ -29,13 +35,15 @@ opt.textContent = o;
 select.appendChild(opt);
 });
 
-// 👇ここ重要：送信しない
+// 送信はconfirmへ
 document.getElementById("form").addEventListener("submit",(e)=>{
 e.preventDefault();
 
-const choice = e.target.choice.value;
+const choice = select.value;
 
 location.href =
 `confirm.html?type=${type}&choice=${encodeURIComponent(choice)}`;
+});
+
 });
 </script>
