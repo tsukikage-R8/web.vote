@@ -1,0 +1,63 @@
+
+/* =========================
+   confirm / thanks 共通
+========================= */
+
+.container{
+animation: pop .4s ease;
+}
+
+/* ふわっと表示 */
+@keyframes pop{
+from{
+transform:scale(0.95);
+opacity:0;
+}
+to{
+transform:scale(1);
+opacity:1;
+}
+}
+
+/* ✓アイコン */
+.check{
+font-size:48px;
+margin-bottom:10px;
+animation: bounce .6s ease;
+}
+
+@keyframes bounce{
+0%{transform:scale(0);}
+60%{transform:scale(1.2);}
+100%{transform:scale(1);}
+}
+
+/* =========================
+   thanksページボタン
+========================= */
+
+.official{
+display:inline-block;
+margin-top:15px;
+padding:12px 18px;
+border-radius:10px;
+background:linear-gradient(90deg,#6ce5ff,#4fc3ff);
+color:white;
+text-decoration:none;
+font-weight:bold;
+transition:.2s;
+}
+
+.official:hover{
+transform:translateY(-2px);
+opacity:0.9;
+}
+
+/* =========================
+   ちょい演出強化（任意）
+========================= */
+
+/* ボタン押し感 */
+button:active{
+transform:scale(0.98);
+}
