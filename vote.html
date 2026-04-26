@@ -129,8 +129,17 @@ e.preventDefault();
 
 const choice = e.target.choice.value;
 
-location.href =
-`confirm.html?type=${type}&choice=${encodeURIComponent(choice)}`;
+// 👇ここで送信（追加）
+fetch("https://script.google.com/macros/s/AKfycbz7dNbsj7XutVdKaTkehBIiC_LAHM2_QbEphy9jTkV5gTLJ3x8KGkRRyUUTYqKRgm5IXg/exec", {
+method:"POST",
+body: JSON.stringify({
+type: type,
+choice: choice
+})
+});
+
+// 👇そのまま確認画面へ
+location.href = `confirm.html?type=${type}&choice=${encodeURIComponent(choice)}`;
 });
 </script>
 
