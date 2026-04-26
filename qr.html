@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>QR一括生成</title>
+<style>
+body{
+font-family:sans-serif;
+background:#0b1026;
+color:white;
+text-align:center;
+padding:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+gap:12px;
+margin-top:20px;
+}
+
+.card{
+background:rgba(255,255,255,0.08);
+padding:10px;
+border-radius:12px;
+}
+
+img{
+width:120px;
+height:120px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>QRコード一括生成</h1>
+<p>クラス別QR一覧</p>
+
+<div class="grid" id="grid"></div>
+
+<script>
+
+const base = "https://tsukikage-r8.github.io/web.vote/confirm.html?type=class&choice=";
+
+const classes = [
+"1J1","1J2","1J3","1J4","1J5",
+"1K1","1K2",
+"1S1","1S2","1SS",
+"2J1","2J2","2J3","2J4","2J5",
+"2K","2S","2SS",
+"3J1","3J2","3J3","3J4","3J5",
+"3K","3S1","3S2","3SS"
+];
+
+const grid = document.getElementById("grid");
+
+classes.forEach(c => {
+
+const url = base + encodeURIComponent(c);
+
+// QR生成API（無料）
+const qr = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(url);
+
+const div = document.createElement("div");
+div.className = "card";
+
+div.innerHTML = `
+<p>${c}</p>
+<img src="${qr}">
+`;
+
+grid.appendChild(div);
+
+});
+
+</script>
+
+</body>
+</html>
