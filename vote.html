@@ -42,14 +42,19 @@ cursor:pointer;
 
 button:disabled{
 opacity:0.5;
-cursor:not-allowed;
 }
 
 .note{
 font-size:12px;
-opacity:0.7;
+opacity:.7;
 margin-top:10px;
 text-align:center;
+}
+
+.stop{
+text-align:center;
+color:#ffaaaa;
+margin-top:10px;
 }
 </style>
 </head>
@@ -67,16 +72,19 @@ text-align:center;
 
 <button type="submit" id="submitBtn">確認へ</button>
 
-<div class="note">
-※各部門につき1回のみ投票できます
-</div>
+<div class="note" id="limitText"></div>
+<div class="stop" id="stopText"></div>
 
 </form>
 
 </div>
 
 <script>
-window.addEventListener("DOMContentLoaded", () => {
+
+const API =
+"https://script.google.com/macros/s/AKfycbxj96B2mEf3HCNVW6pmKuXD31ShN-oYYe53RoAXwF_yg5H7IyoQfkobosDs4vIobo706Q/exec";
+
+window.addEventListener("DOMContentLoaded", async () => {
 
 const params = new URLSearchParams(location.search);
 const type = params.get("type");
@@ -84,10 +92,29 @@ const type = params.get("type");
 const select = document.getElementById("choice");
 const title = document.getElementById("title");
 const submitBtn = document.getElementById("submitBtn");
+const limitText = document.getElementById("limitText");
+const stopText = document.getElementById("stopText");
 
+/* 設定取得 */
+const res = await fetch(API + "?action=settings");
+const settings = await res.json();
+
+const LIMIT = Number(settings.limit);
+const VERSION = settings.version;
+const ENABLED = settings.enabled === true || settings.enabled === "TRUE";
+
+/* 投票停止 */
+if(!ENABLED){
+submitBtn.disabled = true;
+stopText.innerText = "現在投票受付は停止しています";
+}
+
+/* 回数表示 */
+limitText.innerText = `※この部門は${LIMIT}回まで投票できます`;
+
+/* 選択肢 */
 let options = [];
 
-/* タイトル & 選択肢 */
 if(type === "class"){
 title.innerText = "クラス企画投票";
 options = [
@@ -114,17 +141,18 @@ opt.textContent = o;
 select.appendChild(opt);
 });
 
-/* 回数制限チェック */
-const voteKey = "vote_limit_" + type;
+/* 回数キー */
+const voteKey = `vote_${type}_v${VERSION}`;
 
-if(localStorage.getItem(voteKey)){
+let count = Number(localStorage.getItem(voteKey) || 0);
+
+if(count >= LIMIT){
 submitBtn.disabled = true;
 
 const warn = document.createElement("div");
 warn.style.marginTop = "10px";
-warn.style.fontSize = "13px";
 warn.style.color = "#ffb3b3";
-warn.innerText = "この部門はすでに投票済みです";
+warn.innerText = "この部門は投票上限に達しています";
 document.querySelector(".container").appendChild(warn);
 }
 
@@ -132,18 +160,22 @@ document.querySelector(".container").appendChild(warn);
 document.getElementById("form").addEventListener("submit",(e)=>{
 e.preventDefault();
 
-const choice = select.value;
-
-/* 2回目チェック */
-if(localStorage.getItem(voteKey)){
-alert("この部門は1回しか投票できません");
+if(!ENABLED){
+alert("投票は停止しています");
 return;
 }
 
-/* 投票記録 */
-localStorage.setItem(voteKey,"1");
+let count = Number(localStorage.getItem(voteKey) || 0);
 
-/* confirmへ */
+if(count >= LIMIT){
+alert(`この部門は${LIMIT}回まで投票できます`);
+return;
+}
+
+localStorage.setItem(voteKey, count + 1);
+
+const choice = select.value;
+
 location.href =
 `confirm.html?type=${type}&choice=${encodeURIComponent(choice)}`;
 
