@@ -37,6 +37,19 @@ button{
 background:linear-gradient(90deg,#4fc3ff,#7ee0ff);
 color:white;
 font-weight:bold;
+cursor:pointer;
+}
+
+button:disabled{
+opacity:0.5;
+cursor:not-allowed;
+}
+
+.note{
+font-size:12px;
+opacity:0.7;
+margin-top:10px;
+text-align:center;
 }
 </style>
 </head>
@@ -52,7 +65,12 @@ font-weight:bold;
 <option value="">選択してください</option>
 </select>
 
-<button type="submit">確認へ</button>
+<button type="submit" id="submitBtn">確認へ</button>
+
+<div class="note">
+※各部門につき1回のみ投票できます
+</div>
+
 </form>
 
 </div>
@@ -65,9 +83,11 @@ const type = params.get("type");
 
 const select = document.getElementById("choice");
 const title = document.getElementById("title");
+const submitBtn = document.getElementById("submitBtn");
 
 let options = [];
 
+/* タイトル & 選択肢 */
 if(type === "class"){
 title.innerText = "クラス企画投票";
 options = [
@@ -86,11 +106,7 @@ title.innerText = "文化部投票";
 options = ["吹奏楽部","コーラス部","家庭科部"];
 }
 
-// デバッグ用（超重要）
-console.log("type:", type);
-console.log("options:", options);
-
-// 選択肢生成
+/* 選択肢生成 */
 options.forEach(o=>{
 const opt = document.createElement("option");
 opt.value = o;
@@ -98,14 +114,39 @@ opt.textContent = o;
 select.appendChild(opt);
 });
 
-// 送信→confirm
+/* 回数制限チェック */
+const voteKey = "vote_limit_" + type;
+
+if(localStorage.getItem(voteKey)){
+submitBtn.disabled = true;
+
+const warn = document.createElement("div");
+warn.style.marginTop = "10px";
+warn.style.fontSize = "13px";
+warn.style.color = "#ffb3b3";
+warn.innerText = "この部門はすでに投票済みです";
+document.querySelector(".container").appendChild(warn);
+}
+
+/* 送信 */
 document.getElementById("form").addEventListener("submit",(e)=>{
 e.preventDefault();
 
 const choice = select.value;
 
+/* 2回目チェック */
+if(localStorage.getItem(voteKey)){
+alert("この部門は1回しか投票できません");
+return;
+}
+
+/* 投票記録 */
+localStorage.setItem(voteKey,"1");
+
+/* confirmへ */
 location.href =
 `confirm.html?type=${type}&choice=${encodeURIComponent(choice)}`;
+
 });
 
 });
