@@ -124,15 +124,17 @@ options = [
 "3K","3S1","3S2","3SS"
 ];
 
-}else if(type === "sports"){
-title.innerText = "運動部投票";
-options = ["ダンス部","バスケ部"];
+}else if(type === "club"){
+title.innerText = "部活動投票";
 
-}else if(type === "culture"){
-title.innerText = "文化部投票";
-options = ["吹奏楽部","コーラス部","家庭科部"];
+options = [
+"ダンス部",
+"バスケ部",
+"吹奏楽部",
+"コーラス部",
+"家庭科部"
+];
 }
-
 /* 選択肢生成 */
 options.forEach(o=>{
 const opt = document.createElement("option");
