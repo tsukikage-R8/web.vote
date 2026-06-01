@@ -41,34 +41,70 @@ height:120px;
 
 <script>
 
-const base = "https://tsukikage-r8.github.io/web.vote/confirm.html?type=class&choice=";
+const classBase =
+"https://tsukikage-r8.github.io/web.vote/confirm.html?type=class&choice=";
 
+const clubBase =
+"https://tsukikage-r8.github.io/web.vote/confirm.html?type=club&choice=";
+
+
+/* クラス */
 const classes = [
-"2J1","2J2","2J3","2J4","2J5",
-"2K","2S","2SS",
-"3J1","3J2","3J3","3J4","3J5",
-"3K","3S1","3S2","3SS"
+"1年進学","2J1","2J2:『呪われた２年J２組』〜正道館の最後の教室〜","2J3","2J4:占いお化け屋敷","2J5",
+"2K","2S","2SS/3SS:SSカジノ",
+"3J1","3J2:お化け屋敷","3J3お化け屋敷風☆脱出ゲーム","3J4","3J5",
+"3K","3S1:party night！","3S2"
+];
+
+/* 部活動 */
+const clubs = [
+"ダンス部",
+"バスケ部",
+"吹奏楽部",
+"コーラス部",
+"家庭科部",
+"英会話部:English Games Festival",
+"茶道部",
+"書道部:自らの好きな語句、文字を揮毫",
+"インターアクトクラブ:SDGs virtual CAFE",
 ];
 
 const grid = document.getElementById("grid");
 
-classes.forEach(c => {
 
-const url = base + encodeURIComponent(c);
+function createQRCard(name, url){
 
-// QR生成API（無料）
-const qr = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(url);
+const qr =
+"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="
++ encodeURIComponent(url);
 
 const div = document.createElement("div");
 div.className = "card";
 
 div.innerHTML = `
-<p>${c}</p>
+<p>${name}</p>
 <img src="${qr}">
 `;
 
 grid.appendChild(div);
+}
 
+
+/* クラスQR */
+classes.forEach(c=>{
+createQRCard(
+c,
+classBase + encodeURIComponent(c)
+);
+});
+
+
+/* 部活動QR */
+clubs.forEach(c=>{
+createQRCard(
+c,
+clubBase + encodeURIComponent(c)
+);
 });
 
 </script>
